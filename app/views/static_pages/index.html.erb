@@ -4,6 +4,29 @@
   </header>
 
   <section class="main">
-    
+    <ul class="todo-list">
+
+    </ul>
   </section>
 </section>
+
+<script type="text/javascript">
+  $(function() {
+    $.get("/tasks").success( function( data ) {
+      //var to contain the full list of the various list elements
+      var htmlString = "";
+
+      $.each(data, function(index, task) {
+        var liElement = '<li><div class="view"><input class="toggle" type="checkbox"><label>' +
+          task.title +
+          '</label></div></li>';
+        htmlString += liElement;
+      });
+      // Extract DOM element w/the class of todo-list from the page.
+      var ulTodos = $('.todo-list');
+      // Take the HTML string & push it into the HTML element that's
+      // stored in the ulTodos variable.
+      ulTodos.html(htmlString);
+    });
+  });
+</script>
