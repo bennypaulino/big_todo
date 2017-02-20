@@ -22,7 +22,18 @@
 
       // Extract the value of the item in the text field
       var textbox = $('.new-todo');
-      console.log("Task: ", textbox.val())
+      // console.log("Task: ", textbox.val())
+
+      // Create a variable to have the payload for a POST request
+      var payload = {
+        task: {
+          title: textbox.val()
+        }
+      };
+      // POST the payload (the user-submitted data) to the server...
+      $.post("/tasks", payload).success(function(data) {
+        console.log("Successful HTTP request");
+      });
     });
     // The taskHtml function wraps each task within <li> tags
     function taskHtml(task) {
