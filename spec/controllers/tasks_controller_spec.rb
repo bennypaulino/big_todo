@@ -5,10 +5,35 @@ RSpec.describe TasksController, type: :controller do
     it "should list the tasks in the database" do
       task1 = FactoryGirl.create(:task)
       task2 = FactoryGirl.create(:task)
+      task1.update_attributes(title: "Popcorn")
       get :index
       expect(response).to have_http_status :success
       response_value = ActiveSupport::JSON.decode(@response.body)
       expect(response_value.count).to eq(2)
+      response_ids = response_value.collect do |task|
+        task["id"]
+      end
+      expect(response_ids).to eq([task1.id, task2.id])
+    end
+  end
+
+  describe "tasks#update" do
+    it "should allow tasks to be marked as done" do
+      task = FactoryGirl.create(:task, done: false, in_progress: false)
+      put :update, id: task.id, task: { done: true }
+      expect(response).to have_http_status(:success)
+      task.reload
+      expect(task.done).to eq(true)
+      expect(task.in_progress).to eq(false)
+    end
+
+    it "should allow tasks to be marked as in progress" do
+      task = FactoryGirl.create(:task, done: false, in_progress: true)
+      put :update, id: task.id, task: { in_progress: true }
+      expect(response).to have_http_status(:success)
+      task.reload
+      expect(task.in_progress).to eq(true)
+      expect(task.done).to eq(false)
     end
   end
 end
