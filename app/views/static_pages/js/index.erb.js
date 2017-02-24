@@ -2,7 +2,8 @@ $(function() {
   // The taskHtml function wraps each task within <li> tags
   function taskHtml(task) {
     var checkedStatus = task.in_progress || task.done ? "checked" : "";
-    var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
+    var liClass = task.done ? "completed" : "";
+    var liElement = '<li id="listItem-' + task.id + '" class="' + liClass + '">' + '<div class="view"><input class="toggle" type="checkbox"' +
       " data-id='" + task.id + "'" +
       checkedStatus +
       '><label>' +
@@ -23,6 +24,13 @@ $(function() {
       task: {
         done: doneValue
       }
+    // Redraw the li on the page after a successful AJAX request
+    }).success(function(data) {
+      var liHtml = taskHtml(data);
+      // console.log(liHtml);
+      var $li = $("#listItem-" + data.id);
+      $li.replaceWith(liHtml);
+      $('.toggle').change(toggleTask);
     });
   }
 
