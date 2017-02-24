@@ -68,6 +68,9 @@ $(function() {
       // console.log(htmlString);
       // Set up click handler after pushing new items onto the page.
       $('.toggle').click(toggleTask);
+      // Change the data inside the textbox to be a blank string
+      // after we get a successful response from the server.
+      $('.new-todo').val('');
     });
   });
 });
